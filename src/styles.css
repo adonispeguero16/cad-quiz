@@ -46,3 +46,17 @@ pre { background: #0f172a; color: #e2e8f0; padding: 12px; border-radius: 8px; ov
   .feedback small { color: #fde68a; }
   .primary { background: #2563eb; color: #fff; }
 }
+.review { margin-top: 16px; }
+.review h2 { margin: 0; }
+.item { border-left: 4px solid; padding: 8px 12px; display: grid; gap: 6px; border-radius: 4px; }
+.item p { margin: 0; }
+.item.ok { border-color: #16a34a; background: #f0fdf4; }
+.item.bad { border-color: #dc2626; background: #fef2f2; }
+.qtext { white-space: pre-line; }
+.ans { display: block; margin-top: 2px; }
+.ans.right { color: #166534; font-weight: 600; }
+.item small { color: #92400e; }
+@media (prefers-color-scheme: dark) {
+  .item.ok { background: #14532d55; } .item.bad { background: #7f1d1d55; }
+  .ans.right { color: #bbf7d0; } .item small { color: #fde68a; }
+}

@@ -5,6 +5,7 @@ export default function Quiz({ quiz, onFinish, onQuit }) {
   const [score, setScore] = useState(0);
   const [selected, setSelected] = useState([]);
   const [checked, setChecked] = useState(false);
+  const [history, setHistory] = useState([]);
 
   const q = quiz[i];
   const isCorrect = (sel) =>
@@ -13,7 +14,9 @@ export default function Quiz({ quiz, onFinish, onQuit }) {
   const submit = (sel) => {
     setSelected(sel);
     setChecked(true);
-    if (isCorrect(sel)) setScore((s) => s + 1);
+    const ok = isCorrect(sel);
+    if (ok) setScore((s) => s + 1);
+    setHistory((h) => [...h, { q, selected: sel, correct: ok }]);
   };
 
   const choose = (key) => {
@@ -23,11 +26,17 @@ export default function Quiz({ quiz, onFinish, onQuit }) {
   };
 
   const next = () => {
-    if (i + 1 >= quiz.length) return onFinish(score);
+    if (i + 1 >= quiz.length) return onFinish(score, history);
     setI(i + 1);
     setSelected([]);
     setChecked(false);
   };
+
+  const letter = (idx) => String.fromCharCode(65 + idx);
+  const correctLetters = q.options
+    .map((o, idx) => (q.answers.includes(o.key) ? letter(idx) : null))
+    .filter(Boolean)
+    .join(", ");
 
   const cls = (key) => {
     const picked = selected.includes(key);
@@ -50,9 +59,9 @@ export default function Quiz({ quiz, onFinish, onQuit }) {
       {q.multi && <p className="hint">Select {q.pick} answers{!checked && `, then press Check`}.</p>}
 
       <div className="options">
-        {q.options.map((o) => (
+        {q.options.map((o, idx) => (
           <button key={o.key} className={cls(o.key)} onClick={() => choose(o.key)}>
-            <b>{o.key}.</b> {o.text}
+            <b>{letter(idx)}.</b> {o.text}
           </button>
         ))}
       </div>
@@ -65,7 +74,7 @@ export default function Quiz({ quiz, onFinish, onQuit }) {
 
       {checked && (
         <div className={isCorrect(selected) ? "feedback ok" : "feedback bad"}>
-          {isCorrect(selected) ? "✓ Correct!" : `✗ Incorrect. Correct answer: ${q.answers.join(", ")}`}
+          {isCorrect(selected) ? "✓ Correct!" : `✗ Incorrect. Correct answer: ${correctLetters}`}
           {q.inferred && (
             <small>This answer wasn't marked in the PDF; it is a best-guess answer, so double-check it.</small>
           )}

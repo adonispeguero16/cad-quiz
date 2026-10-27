@@ -6,6 +6,7 @@ export default function Setup({ total, onStart }) {
   const [from, setFrom] = useState(1);
   const [to, setTo] = useState(20);
   const [randomOrder, setRandomOrder] = useState(false);
+  const [shuffleChoices, setShuffleChoices] = useState(false);
 
   const lo = Math.max(1, Math.min(from, to));
   const hi = Math.min(total, Math.max(from, to));
@@ -51,8 +52,14 @@ export default function Setup({ total, onStart }) {
         </label>
       )}
 
+      <label className="check">
+        <input type="checkbox" checked={shuffleChoices}
+               onChange={(e) => setShuffleChoices(e.target.checked)} />
+        Shuffle the answer choices (A, B, C, D) in each question
+      </label>
+
       <button className="primary"
-              onClick={() => onStart({ mode, count: n, from: lo, to: hi, randomOrder })}>
+              onClick={() => onStart({ mode, count: n, from: lo, to: hi, randomOrder, shuffleChoices })}>
         Start quiz ({n} question{n > 1 ? "s" : ""})
       </button>
     </section>
